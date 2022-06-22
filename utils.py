@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import plotly.graph_objects as go
 import itertools
 from collections import Counter
 from kiwipiepy import Kiwi
@@ -46,6 +47,32 @@ def sum_count(df, judgement, what, by):
 def get_count(df: pd.DataFrame, what='subject', by='each'):
     return [sum_count(df, i, what, by) for i in range(3)]
     
+
+def visualize(df: pd.DataFrame, what='subject', by='each', top_k='int'):
+    judgement_0_count, judgement_1_count, judgement_2_count = get_count(df, what, by)
+    
+    fig = go.Figure(data=[
+        go.Bar(
+            name='judgement_0',
+            x=[x for x, _ in judgement_0_count.most_common(top_k)], 
+            y=[y for _, y in judgement_0_count.most_common(top_k)]
+            ),
+        go.Bar(
+            name='judgement_1', 
+            x=[x for x, _ in judgement_0_count.most_common(top_k)], 
+            y=[y for _, y in judgement_1_count.most_common(top_k)]
+            ),
+        go.Bar(
+            name='judgement_2',
+            x=[x for x, _ in judgement_0_count.most_common(top_k)],
+            y=[y for _, y in judgement_2_count.most_common(top_k)])
+        ])
+    
+    fig.update_layout(barmode='group')
+    
+    return fig.show()
+    
+ 
 class PostpositionRemover:
     def __init__(self):
         self.kiwi = Kiwi()
