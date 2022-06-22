@@ -42,6 +42,10 @@ def sum_count(df, judgement, what, by):
     if by == 'video':
         return sum_count_by_video(df, judgement, what)
 
+
+def get_count(df: pd.DataFrame, what='subject', by='each'):
+    return [sum_count(df, i, what, by) for i in range(3)]
+    
 class PostpositionRemover:
     def __init__(self):
         self.kiwi = Kiwi()
