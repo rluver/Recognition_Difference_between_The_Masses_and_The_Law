@@ -1,5 +1,46 @@
 import pandas as pd
+import numpy as np
+import itertools
+from collections import Counter
 from kiwipiepy import Kiwi
+
+
+def sum_count_by_all(df, judgement, what):
+    df[f'{what}_count'] = df[f'preprocessed_{what}s'].apply(lambda x: Counter(list(itertools.chain(*x))))
+    objects = df.query(f'judgement=={judgement}').loc[:, f'{what}_count']
+    
+    count = Counter()
+    for obj in objects:
+        count.update(obj)
+
+    return count
+
+
+def sum_count_by_each(df, judgement, what):
+    df[f'{what}_count'] = df[f'preprocessed_{what}s'].apply(lambda x: Counter(np.unique(list(itertools.chain(*x)))))
+    return Counter(itertools.chain(*df.query(f'judgement=={judgement}').loc[:, f'{what}_count']))
+
+
+def sum_count_by_video(df, judgement, what):
+    df[f'{what}_count'] = df[f'preprocessed_{what}s'].apply(lambda x: Counter(list(itertools.chain(*x))))
+
+    count = Counter()
+    for video in df.video_id.unique():
+        count_by_video = Counter(np.unique(list(itertools.chain(*df.query(f'judgement=={judgement} and video_id=="{video}"').loc[:, f'{what}_count']))))
+        count.update(count_by_video)
+        
+    return count 
+
+
+def sum_count(df, judgement, what, by):
+    if by == 'all':
+        return sum_count_by_all(df, judgement, what)
+
+    if by == 'each':
+        return sum_count_by_each(df, judgement, what)
+
+    if by == 'video':
+        return sum_count_by_video(df, judgement, what)
 
 class PostpositionRemover:
     def __init__(self):
