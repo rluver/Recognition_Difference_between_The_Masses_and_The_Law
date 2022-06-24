@@ -47,7 +47,7 @@ def get_count(df: pd.DataFrame, what='subject', by='each'):
     return [sum_count(df, i, what, by) for i in range(3)]
     
 
-def visualize(df: pd.DataFrame, what='subject', by='each', top_k='int'):
+def visualize(df: pd.DataFrame, what='subject', by='each', top_k=20):
     judgement_0_count, judgement_1_count, judgement_2_count = get_count(df, what, by)
     
     fig = go.Figure(data=[
@@ -67,7 +67,10 @@ def visualize(df: pd.DataFrame, what='subject', by='each', top_k='int'):
             y=[y for _, y in judgement_2_count.most_common(top_k)])
         ])
     
-    fig.update_layout(barmode='group')
+    fig.update_layout(
+        barmode='group',
+        xaxis={'categoryorder': 'total descending'}
+            )
     
     return fig.show()
     
