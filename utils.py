@@ -58,12 +58,12 @@ def visualize(df: pd.DataFrame, what='subject', by='each', top_k='int'):
             ),
         go.Bar(
             name='judgement_1', 
-            x=[x for x, _ in judgement_0_count.most_common(top_k)], 
+            x=[x for x, _ in judgement_1_count.most_common(top_k)], 
             y=[y for _, y in judgement_1_count.most_common(top_k)]
             ),
         go.Bar(
             name='judgement_2',
-            x=[x for x, _ in judgement_0_count.most_common(top_k)],
+            x=[x for x, _ in judgement_2_count.most_common(top_k)],
             y=[y for _, y in judgement_2_count.most_common(top_k)])
         ])
     
