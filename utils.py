@@ -11,8 +11,7 @@ def sum_count_by_all(df, judgement, what):
     objects = df.query(f'judgement=={judgement}').loc[:, f'{what}_count']
     
     count = Counter()
-    for obj in objects:
-        count.update(obj)
+    [count.update(obj) for obj in objects]
 
     return count
 
